@@ -1,0 +1,15 @@
+CREATE OR REFRESH LIVE TABLE bronze_sales
+COMMENT "Bronze layer table for raw sales data"
+TBLPROPERTIES ("quality" = "bronze")
+AS
+SELECT
+  CAST(sale_id AS STRING) AS sale_id,
+  CAST(customer_id AS STRING) AS customer_id,
+  CAST(product_id AS STRING) AS product_id,
+  CAST(quantity AS INT) AS quantity,
+  CAST(price AS DECIMAL(10,2)) AS price,
+  CAST(sale_date AS TIMESTAMP) AS sale_date,
+  _metadata.file_path AS source_file,
+  _metadata.ingestion_time AS ingestion_time
+FROM
+  cloud_files("/mnt/raw/sales/", "csv", map("header","true"));

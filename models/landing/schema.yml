@@ -1,7 +1,7 @@
 # dbt tests run on landing tables
 # BEFORE staging models build
 # Equivalent to your DQM framework
-#
+# method
 
 version: 2
 

@@ -1,0 +1,209 @@
+<svg viewBox="0 0 1320 760" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+
+  <rect width="1320" height="760" fill="#ffffff"/>
+
+  <!-- ===================== ROW 1: MAIN PIPELINE ===================== -->
+
+  <!-- SOURCE -->
+  <g>
+    <rect x="30" y="60" width="170" height="150" rx="6" fill="#ffffff" stroke="#d0d0d0" stroke-width="1.5"/>
+    <rect x="30" y="60" width="170" height="24" rx="6" fill="#6b7280"/>
+    <rect x="30" y="72" width="170" height="12" fill="#6b7280"/>
+    <text x="115" y="76" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="600" letter-spacing="1">SOURCE</text>
+    <text x="115" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">IQVIA + Veeva</text>
+    <text x="115" y="132" text-anchor="middle" font-size="10.5" fill="#4b5563">Rx transactions,</text>
+    <text x="115" y="147" text-anchor="middle" font-size="10.5" fill="#4b5563">HCP call activity,</text>
+    <text x="115" y="162" text-anchor="middle" font-size="10.5" fill="#4b5563">customer master</text>
+    <text x="115" y="182" text-anchor="middle" font-size="10" fill="#9ca3af">CSV files → S3</text>
+  </g>
+
+  <path d="M200 135 L228 135" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- LAKE -->
+  <g>
+    <rect x="230" y="60" width="150" height="150" rx="6" fill="#ffffff" stroke="#d0d0d0" stroke-width="1.5"/>
+    <rect x="230" y="60" width="150" height="24" rx="6" fill="#d97706"/>
+    <rect x="230" y="72" width="150" height="12" fill="#d97706"/>
+    <text x="305" y="76" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="600" letter-spacing="1">LAKE</text>
+    <text x="305" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">Amazon S3</text>
+    <text x="305" y="132" text-anchor="middle" font-size="10.5" fill="#4b5563">raw landing zone</text>
+    <text x="305" y="150" text-anchor="middle" font-size="10.5" fill="#4b5563">IQVIA_STG /</text>
+    <text x="305" y="165" text-anchor="middle" font-size="10.5" fill="#4b5563">VEEVA_STG paths</text>
+    <text x="305" y="185" text-anchor="middle" font-size="10" fill="#9ca3af">COPY INTO source</text>
+  </g>
+
+  <path d="M380 135 L408 135" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- LANDING -->
+  <g>
+    <rect x="410" y="60" width="160" height="150" rx="6" fill="#ffffff" stroke="#d0d0d0" stroke-width="1.5"/>
+    <rect x="410" y="60" width="160" height="24" rx="6" fill="#0284c7"/>
+    <rect x="410" y="72" width="160" height="12" fill="#0284c7"/>
+    <text x="490" y="76" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="600" letter-spacing="1">LANDING</text>
+    <text x="490" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">Snowflake RAW</text>
+    <text x="490" y="132" text-anchor="middle" font-size="10.5" fill="#4b5563">COPY INTO via</text>
+    <text x="490" y="147" text-anchor="middle" font-size="10.5" fill="#4b5563">Matillion, freshness</text>
+    <text x="490" y="162" text-anchor="middle" font-size="10.5" fill="#4b5563">+ quality tests</text>
+    <text x="490" y="182" text-anchor="middle" font-size="10" fill="#9ca3af">IQVIA_STG / VEEVA_STG</text>
+  </g>
+
+  <path d="M570 135 L598 135" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- STAGING -->
+  <g>
+    <rect x="600" y="60" width="160" height="150" rx="6" fill="#ffffff" stroke="#d0d0d0" stroke-width="1.5"/>
+    <rect x="600" y="60" width="160" height="24" rx="6" fill="#9ca3af"/>
+    <rect x="600" y="72" width="160" height="12" fill="#9ca3af"/>
+    <text x="680" y="76" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="600" letter-spacing="1">STAGING (dbt)</text>
+    <text x="680" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">CDR_STG</text>
+    <text x="680" y="132" text-anchor="middle" font-size="10.5" fill="#4b5563">clean · standardize</text>
+    <text x="680" y="147" text-anchor="middle" font-size="10.5" fill="#4b5563">incremental merge</text>
+    <text x="680" y="162" text-anchor="middle" font-size="10.5" fill="#4b5563">4 shared macros</text>
+    <text x="680" y="182" text-anchor="middle" font-size="10" fill="#9ca3af">stg_iqvia_trx, stg_veeva_calls</text>
+  </g>
+
+  <path d="M760 135 L788 135" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- DW -->
+  <g>
+    <rect x="790" y="60" width="160" height="150" rx="6" fill="#ffffff" stroke="#d0d0d0" stroke-width="1.5"/>
+    <rect x="790" y="60" width="160" height="24" rx="6" fill="#b45309"/>
+    <rect x="790" y="72" width="160" height="12" fill="#b45309"/>
+    <text x="870" y="76" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="600" letter-spacing="1">DW (dbt)</text>
+    <text x="870" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">CDR_DW</text>
+    <text x="870" y="132" text-anchor="middle" font-size="10.5" fill="#4b5563">star schema:</text>
+    <text x="870" y="147" text-anchor="middle" font-size="10.5" fill="#4b5563">dims + incremental fact</text>
+    <text x="870" y="162" text-anchor="middle" font-size="10.5" fill="#4b5563">SCD2 via snapshot</text>
+    <text x="870" y="182" text-anchor="middle" font-size="10" fill="#9ca3af">dim_*, fact_trx</text>
+  </g>
+
+  <path d="M950 135 L978 135" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- SERVE -->
+  <g>
+    <rect x="980" y="60" width="170" height="150" rx="6" fill="#ffffff" stroke="#d0d0d0" stroke-width="1.5"/>
+    <rect x="980" y="60" width="170" height="24" rx="6" fill="#dc2626"/>
+    <rect x="980" y="72" width="170" height="12" fill="#dc2626"/>
+    <text x="1065" y="76" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="600" letter-spacing="1">SERVE</text>
+    <text x="1065" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">COMPASS_RPT</text>
+    <text x="1065" y="132" text-anchor="middle" font-size="10.5" fill="#4b5563">rpt_field_insights</text>
+    <text x="1065" y="150" text-anchor="middle" font-size="10.5" fill="#4b5563">HCP + territory KPIs,</text>
+    <text x="1065" y="165" text-anchor="middle" font-size="10.5" fill="#4b5563">rankings pre-calculated</text>
+    <text x="1065" y="185" text-anchor="middle" font-size="10" fill="#9ca3af">Power BI import mode</text>
+  </g>
+
+  <!-- ===================== ROW 2: TESTING GATES ===================== -->
+  <g>
+    <text x="30" y="255" font-size="12" font-weight="700" fill="#374151">TEST GATES · dbt test</text>
+    <rect x="30" y="265" width="1120" height="46" rx="6" fill="#f9fafb" stroke="#e5e7eb"/>
+    <text x="50" y="293" font-size="10.5" fill="#4b5563">not_null · unique · accepted_values · accepted_range (dbt_utils) · relationships to dim_territory · custom singular test: check_no_negative_trx</text>
+  </g>
+
+  <!-- arrows down from each stage to gate bar -->
+  <path d="M490 210 L490 265" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <path d="M680 210 L680 265" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <path d="M870 210 L870 265" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+  <!-- ===================== ROW 3: SCD2 CALLOUT ===================== -->
+  <g>
+    <rect x="600" y="330" width="360" height="80" rx="6" fill="#fffbeb" stroke="#f3e0a3"/>
+    <text x="620" y="352" font-size="11" font-weight="700" fill="#92400e">SCD Type 2 — snap_dim_customer</text>
+    <text x="620" y="370" font-size="10" fill="#78350f">Territory reassignment tracked with valid_from /</text>
+    <text x="620" y="384" font-size="10" fill="#78350f">valid_to. Fact joins on date range so historical</text>
+    <text x="620" y="398" font-size="10" fill="#78350f">TRx always attributes to the correct territory.</text>
+  </g>
+  <path d="M780 330 L780 210" stroke="#d97706" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+  <!-- ===================== ROW 4: ORCHESTRATION ===================== -->
+  <g>
+    <text x="30" y="450" font-size="12" font-weight="700" fill="#374151">ORCHESTRATION</text>
+    <rect x="30" y="460" width="120" height="70" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="90" y="488" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">Matillion</text>
+    <text x="90" y="504" text-anchor="middle" font-size="9.5" fill="#065f46">DAG orchestrator</text>
+    <text x="90" y="518" text-anchor="middle" font-size="9.5" fill="#065f46">exit-code gated</text>
+
+    <path d="M150 495 L178 495" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="180" y="460" width="150" height="70" rx="6" fill="#ffffff" stroke="#d0d0d0"/>
+    <text x="255" y="482" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1f2937">1 · COPY INTO</text>
+    <text x="255" y="497" text-anchor="middle" font-size="9.5" fill="#4b5563">S3 → landing</text>
+    <text x="255" y="512" text-anchor="middle" font-size="9.5" fill="#4b5563">freshness + tests</text>
+
+    <path d="M330 495 L358 495" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="360" y="460" width="150" height="70" rx="6" fill="#ffffff" stroke="#d0d0d0"/>
+    <text x="435" y="482" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1f2937">2 · dbt run</text>
+    <text x="435" y="497" text-anchor="middle" font-size="9.5" fill="#4b5563">staging → test</text>
+    <text x="435" y="512" text-anchor="middle" font-size="9.5" fill="#4b5563">tag:staging</text>
+
+    <path d="M510 495 L538 495" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="540" y="460" width="150" height="70" rx="6" fill="#ffffff" stroke="#d0d0d0"/>
+    <text x="615" y="482" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1f2937">3 · dbt snapshot</text>
+    <text x="615" y="497" text-anchor="middle" font-size="9.5" fill="#4b5563">SCD2 customer</text>
+    <text x="615" y="512" text-anchor="middle" font-size="9.5" fill="#4b5563">dim update</text>
+
+    <path d="M690 495 L718 495" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="720" y="460" width="150" height="70" rx="6" fill="#ffffff" stroke="#d0d0d0"/>
+    <text x="795" y="482" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1f2937">4 · dbt run</text>
+    <text x="795" y="497" text-anchor="middle" font-size="9.5" fill="#4b5563">dw → test</text>
+    <text x="795" y="512" text-anchor="middle" font-size="9.5" fill="#4b5563">tag:dw</text>
+
+    <path d="M870 495 L898 495" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="900" y="460" width="150" height="70" rx="6" fill="#ffffff" stroke="#d0d0d0"/>
+    <text x="975" y="482" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1f2937">5 · dbt run</text>
+    <text x="975" y="497" text-anchor="middle" font-size="9.5" fill="#4b5563">rpt → audit log</text>
+    <text x="975" y="512" text-anchor="middle" font-size="9.5" fill="#4b5563">tag:rpt</text>
+
+    <path d="M1050 495 L1078 495" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="1080" y="460" width="70" height="70" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+    <text x="1115" y="490" text-anchor="middle" font-size="10" font-weight="700" fill="#991b1b">exit ≠ 0</text>
+    <text x="1115" y="504" text-anchor="middle" font-size="9" fill="#991b1b">→ stop +</text>
+    <text x="1115" y="516" text-anchor="middle" font-size="9" fill="#991b1b">alert email</text>
+  </g>
+
+  <!-- ===================== ROW 5: FOUNDATION ===================== -->
+  <g>
+    <line x1="30" y1="580" x2="1150" y2="580" stroke="#e5e7eb" stroke-width="1"/>
+    <text x="30" y="608" font-size="11" font-weight="700" fill="#6b7280" letter-spacing="1">FOUNDATION &amp; TOOLS</text>
+
+    <g transform="translate(30,625)">
+      <rect width="150" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Snowflake</text>
+    </g>
+    <g transform="translate(200,625)">
+      <rect width="150" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">dbt Core</text>
+    </g>
+    <g transform="translate(370,625)">
+      <rect width="150" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Matillion</text>
+    </g>
+    <g transform="translate(540,625)">
+      <rect width="150" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Amazon S3</text>
+    </g>
+    <g transform="translate(710,625)">
+      <rect width="150" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">Power BI</text>
+    </g>
+    <g transform="translate(880,625)">
+      <rect width="150" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">GitHub</text>
+    </g>
+    <g transform="translate(1050,625)">
+      <rect width="100" height="40" rx="6" fill="#ffffff" stroke="#e5e7eb"/>
+      <text x="50" y="25" text-anchor="middle" font-size="12" font-weight="600" fill="#374151">YAML</text>
+    </g>
+  </g>
+
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L6,3 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+</svg>

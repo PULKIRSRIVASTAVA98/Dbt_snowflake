@@ -1,0 +1,77 @@
+# Declares all landing tables
+# Loaded by COPY INTO before dbt runs
+# dbt does NOT own these tables
+
+version: 2
+
+sources:
+  - name: IQVIA_STG
+    database: COMPASS_DB
+    schema: IQVIA_STG
+    description: "IQVIA prescription data landing tables"
+
+    # Freshness check
+    # Alert if data older than 24 hours
+    loaded_at_field: loaded_at
+    freshness:
+      warn_after:
+        count: 24
+        period: hour
+      error_after:
+        count: 48
+        period: hour
+
+    tables:
+      - name: LND_IQVIA_TRX
+        description: "IQVIA prescription transactions landing"
+        columns:
+          - name: MDM_ID
+            description: "Master Data Management customer ID"
+          - name: PRODUCT_CODE
+            description: "Product identifier"
+          - name: TIME_BUCKET
+            description: "Reporting time period C4W/C13W/MAT"
+          - name: CURR_TRX
+            description: "Current period prescriptions"
+          - name: PREV_TRX
+            description: "Previous period prescriptions"
+          - name: CURR_NBRX
+            description: "Current new prescriptions"
+          - name: PREV_NBRX
+            description: "Previous new prescriptions"
+          - name: TERRITORY_ID
+            description: "Sales territory"
+          - name: LOADED_AT
+            description: "Timestamp when row loaded"
+
+  - name: VEEVA_STG
+    database: COMPASS_DB
+    schema: VEEVA_STG
+    description: "Veeva CRM call activity landing tables"
+    loaded_at_field: loaded_at
+    freshness:
+      warn_after:
+        count: 24
+        period: hour
+      error_after:
+        count: 48
+        period: hour
+
+    tables:
+      - name: LND_VEEVA_CALLS
+        description: "Veeva HCP call activity landing"
+        columns:
+          - name: CALL_ID
+            description: "Unique call identifier"
+          - name: MDM_ID
+            description: "HCP Master Data Management ID"
+          - name: REP_ID
+            description: "Sales rep identifier"
+          - name: CALL_DATE
+            description: "Date of sales call"
+          - name: PRODUCT_CODE
+            description: "Product discussed"
+          - name: TERRITORY_ID
+            description: "Territory of call"
+          - name: LOADED_AT
+            description: "Load timestamp"

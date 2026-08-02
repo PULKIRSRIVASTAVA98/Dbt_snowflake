@@ -2,7 +2,6 @@
 
 A dbt project that builds a layered data warehouse on Snowflake for pharma commercial analytics — combining prescription data (IQVIA) and CRM call activity (Veeva) into a single reporting layer consumed by Power BI.
 
-![VS Code project structure](screenshots/vscode-explorer.png)
 
 ## Overview
 

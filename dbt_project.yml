@@ -1,0 +1,36 @@
+# Master configuration for entire project
+
+name: 'compass_dbt'
+version: '1.0.0'
+config-version: 2
+
+profile: 'compass_dbt'
+
+model-paths: ["models"]
+snapshot-paths: ["snapshots"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+
+models:
+  compass_dbt:
+
+    landing:
+      +materialized: view
+      +schema: IQVIA_STG
+      +tags: ['landing']
+
+    staging:
+      +materialized: incremental
+      +schema: CDR_STG
+      +tags: ['staging']
+
+    dw:
+      +materialized: table
+      +schema: CDR_DW
+      +tags: ['dw']
+
+    rpt:
+      +materialized: table
+      +schema: COMPASS_RPT
+      +tags: ['rpt']

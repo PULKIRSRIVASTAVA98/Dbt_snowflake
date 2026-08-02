@@ -1,0 +1,162 @@
+# dbt tests run on landing tables
+# BEFORE staging models build
+# Equivalent to your DQM framework
+
+version: 2
+
+models:
+  - name: LND_IQVIA_TRX
+    description: >
+      IQVIA prescription data landing table.
+      Loaded via COPY INTO from S3.
+      dbt tests validate before staging loads.
+
+    columns:
+
+      # PRIMARY KEY TESTS
+      - name: MDM_ID
+        description: "HCP Master Data Management ID"
+        tests:
+          - not_null:
+              severity: error
+              # Fails pipeline if any null
+          - unique:
+              severity: error
+              # No duplicate MDM_IDs
+              # within same TIME_BUCKET
+              # and PRODUCT_CODE combination
+
+      # PRODUCT TESTS
+      - name: PRODUCT_CODE
+        description: "Product identifier"
+        tests:
+          - not_null:
+              severity: error
+          - accepted_values:
+              values: [
+                'REXULTI',
+                'JYNARQUE',
+                'ABILIFY',
+                'SAMSCA'
+              ]
+              severity: warn
+              # Warning not error
+              # New products may appear
+
+      # TIME BUCKET TESTS
+      - name: TIME_BUCKET
+        description: "Reporting time period"
+        tests:
+          - not_null:
+              severity: error
+          - accepted_values:
+              values: [
+                'C4W',
+                'C13W',
+                'C26W',
+                'MAT'
+              ]
+              severity: error
+
+      # NUMERIC VALUE TESTS
+      - name: CURR_TRX
+        description: "Current prescriptions"
+        tests:
+          - not_null:
+              severity: error
+          # Custom test for negative values
+          - dbt_utils.accepted_range:
+              min_value: 0
+              severity: error
+              # No negative prescriptions allowed
+
+      - name: PREV_TRX
+        description: "Previous prescriptions"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              severity: error
+
+      - name: CURR_NBRX
+        description: "Current new prescriptions"
+        tests:
+          - not_null:
+              severity: error
+          - dbt_utils.accepted_range:
+              min_value: 0
+              severity: error
+
+      - name: PREV_NBRX
+        description: "Previous new prescriptions"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              severity: warn
+              # Warning — historical can have negatives
+
+      # TERRITORY TESTS
+      - name: TERRITORY_ID
+        description: "Sales territory"
+        tests:
+          - not_null:
+              severity: error
+          - relationships:
+              to: ref('dim_territory')
+              field: territory_id
+              severity: warn
+              # Warn if unknown territory
+              # New territories may arrive
+
+  - name: LND_VEEVA_CALLS
+    description: "Veeva CRM call activity landing"
+    columns:
+      - name: CALL_ID
+        tests:
+          - not_null
+          - unique
+
+      - name: MDM_ID
+        tests:
+          - not_null
+
+      - name: CALL_DATE
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: "'2020-01-01'"
+              max_value: "'2026-12-31'"
+              severity: error
+
+Custom singular test — negative TRx check:
+
+sql
+-- FILE: tests/check_no_negative_trx.sql
+-- Custom data test
+-- Returns rows that FAIL the test
+-- Zero rows = test passes
+-- Any rows = test fails
+
+SELECT
+    MDM_ID,
+    PRODUCT_CODE,
+    TIME_BUCKET,
+    CURR_TRX,
+    CURR_NBRX
+FROM {{ source('IQVIA_STG', 'LND_IQVIA_TRX') }}
+WHERE CURR_TRX < 0
+   OR CURR_NBRX < 0
+
+/*
+If CURR_TRX or CURR_NBRX is negative
+This test returns those rows
+dbt marks test as FAILED
+Pipeline stops before staging loads
+
+REAL SCENARIO:
+IQVIA sent negative TRx values
+for adjustment records
+Without this test: negative values
+corrupted our KPI calculations
+With this test: caught at landing
+before any downstream impact
+*/

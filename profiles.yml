@@ -1,0 +1,28 @@
+# Snowflake connection configuration
+# Lives on EC2 server where dbt is installed
+
+compass_dbt:
+  target: prod
+  outputs:
+
+    dev:
+      type: snowflake
+      account: oapi.us-east-1
+      user: svc_dbt_dev_user
+      password: "{{ env_var('DBT_DEV_PASSWORD') }}"
+      role: DBT_DEV_ROLE
+      database: COMPASS_DB
+      warehouse: WH_DW
+      schema: CDR_DW
+      threads: 4
+
+    prod:
+      type: snowflake
+      account: oapi.us-east-1
+      user: svc_dbt_prod_user
+      password: "{{ env_var('DBT_PROD_PASSWORD') }}"
+      role: DBT_PROD_ROLE
+      database: COMPASS_DB
+      warehouse: WH_DW
+      schema: CDR_DW
+      threads: 8

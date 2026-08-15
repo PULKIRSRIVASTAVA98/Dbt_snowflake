@@ -1,0 +1,39 @@
+# FILE: models/staging/schema.yml
+
+version: 2
+
+models:
+  - name: stg_iqvia_trx
+    description: >
+      Cleaned and standardised IQVIA prescription data.
+      Incremental load from landing layer.
+      Macros applied for cleaning and segmentation.
+
+    columns:
+      - name: mdm_id
+        tests:
+          - not_null
+          - unique:
+              config:
+                where: "time_bucket = 'C4W'"
+                # Unique per time bucket
+
+      - name: product_segment
+        tests:
+          - accepted_values:
+              values: [
+                'CNS_SCHIZOPHRENIA',
+                'CNS_BIPOLAR',
+                'RENAL_PKD',
+                'RENAL_HYPONATREMIA',
+                'OTHER'
+              ]
+
+      - name: curr_trx
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+      - name: trx_growth_pct
+        description: "Period over period TRx growth %"
